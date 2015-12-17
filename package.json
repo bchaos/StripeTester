@@ -1,0 +1,17 @@
+{
+  "name": "fuzzy_search",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "~v2.0.0-rc1",
+    "winston": "~0.7.2",    
+    "path": "0.12.7",
+    "nconf": "~0.6.9",
+    "stripe":"*"
+  }
+}
