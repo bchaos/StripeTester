@@ -11,6 +11,7 @@ buildChargeList = (charge, length, index, realcharges, callback) ->
     if index = length
         callback realcharges 
     else
+        console.log charge[index]
         createdTime1= charge[index].created
         createdTime2= charge[index].created+20000
         checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
