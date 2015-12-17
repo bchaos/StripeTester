@@ -1,5 +1,5 @@
 (function() {
-  var buildChargeList, checkForTestOrder, findFakeOrder, flagOrder, fortressPool, path, setOrderToTest, stripe;
+  var buildAllCustomers, buildChargeList, checkForCharge, finalChages, findFakeOrder, flagOrder, fortressPool, getCustomers, path, setOrderToTest, stripe;
 
   path = require('path');
 
@@ -7,52 +7,55 @@
 
   stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
-  stripe.charges.list({
-    limit: 20000
-  }, function(err, charges) {
-    return buildChargeList(charges.data, charges.data.length, 0, [], function(realcharges) {
-      return findFakeOrder(realcharges, function(results) {
-        var result, _i, _len, _results;
-        console.log('items found');
-        console.log(results.length);
-        _results = [];
-        for (_i = 0, _len = results.length; _i < _len; _i++) {
-          result = results[_i];
-          _results.push(setOrderToTest(result.id));
-        }
-        return _results;
+  getCustomers = function(item, callback) {
+    return stripe.customers.list(item, function(err, charges) {
+      var lastObject, lastindex;
+      lastindex = charges.data.length - 1;
+      lastObject = charges.data[lastindex].id;
+      console.log(lastObject);
+      return buildChargeList(charges.data, charges.data.length, 0, [], function(realcharges) {
+        return callback(lastindex + 1, lastObject, realcharges);
       });
     });
-  });
+  };
 
   buildChargeList = function(charge, length, index, realcharges, callback) {
-    var createdTime1, createdTime2;
+    var createdTime1, createdTime2, last4;
     if (index === length) {
       return callback(realcharges);
     } else {
-      createdTime1 = charge[index].created - 60000;
-      createdTime2 = charge[index].created + 60000;
-      return checkForTestOrder([createdTime1, createdTime2], charge[index].id, function(result) {
-        realcharges.push(result.id);
+      last4 = charge[index].cards.data[0].last4;
+      if (last4 !== 4242 || last4 !== 4111) {
+        createdTime1 = charge[index].created;
+        createdTime2 = charge[index].created + 30000;
+        return checkForCharge([createdTime1, createdTime2], charge[index].id, function(result) {
+          if (result.id !== 0 && result.id !== void 0) {
+            realcharges.push(result.id);
+          }
+          return buildChargeList(charge, length, index + 1, realcharges, callback);
+        });
+      } else {
         return buildChargeList(charge, length, index + 1, realcharges, callback);
-      });
+      }
     }
   };
 
-  checkForTestOrder = function(query, stripeorder, callback) {
+  checkForCharge = function(query, stripeorder, callback) {
     return fortressPool.getConnection(function(err, connection) {
       var sql;
       if (err || typeof connection === "undefined") {
-        log.error("could not connect");
+        console.log('could not connect');
         return callback(-1);
       } else {
         sql = 'SELECT * FROM orders where UNIX_TIMESTAMP(created_at) between  ? and ? ';
-        return connection.query(sql, query, function(err, results) {
+        return query = connection.query(sql, query, function(err, results) {
           connection.release();
           if (err) {
-            return log.error("err");
+            return console.log('err');
           } else if (results[0]) {
             return callback(results[0]);
+          } else {
+            return callback(0);
           }
         });
       }
@@ -71,7 +74,7 @@
       whereIn += result;
       firsttime = 0;
     }
-    whereIn += console.log(whereIn);
+    console.log(whereIn);
     return fortressPool.getConnection(function(err, connection) {
       var query, sql;
       if (err || typeof connection === "undefined") {
@@ -124,5 +127,35 @@
       }
     });
   };
+
+  finalChages = [];
+
+  buildAllCustomers = function(offset) {
+    return getCustomers(offset, function(result, lastObject, charges) {
+      finalChages = finalChages.concat(charges);
+      if (result === 100) {
+        return buildAllCustomers({
+          limit: 100,
+          starting_after: lastObject
+        });
+      } else {
+        return findFakeOrder(finalChages, function(results) {
+          var _i, _len, _results;
+          console.log('total fakecharges found');
+          console.log(results.length);
+          _results = [];
+          for (_i = 0, _len = results.length; _i < _len; _i++) {
+            result = results[_i];
+            _results.push(setOrderToTest(result.id));
+          }
+          return _results;
+        });
+      }
+    });
+  };
+
+  buildAllCustomers({
+    limit: 100
+  });
 
 }).call(this);

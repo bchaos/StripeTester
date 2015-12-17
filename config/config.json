@@ -14,11 +14,11 @@
   },
 
   "fortressDb": {
-    "host": "fortress.c7tnnahrboq4.us-west-2.rds.amazonaws.com",
-    "user": "fortress",
-    "password": "nU34<(8mv=XW",
+    "host": "localhost",
+    "user": "root",
+    "password": "root",
     "port": "3306",
-    "database": "fortress"
+    "database": "fortressdev"
   }, 
     
   "cache": "localhost:11211"

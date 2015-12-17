@@ -2,37 +2,55 @@ path = require('path')
 fortressPool= require path.join(__dirname, 'libs', 'fortressPool') 
 stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
-stripe.charges.list {limit:20000}, (err,charges)->
-    buildChargeList  charges.data, charges.data.length, 0, [], (realcharges) ->
-        findFakeOrder realcharges ,(results)->
-            console.log 'items found'
-            console.log results.length
-            for result in results 
-                setOrderToTest result.id
-        
+
+
+
+
+
+getCustomers = (item, callback)->
+    stripe.customers.list item  , (err,charges)->
+        lastindex = charges.data.length-1
+        lastObject = charges.data[lastindex].id
+        console.log lastObject
+        buildChargeList  charges.data, charges.data.length, 0, [], (realcharges) ->
+            callback lastindex+1,lastObject ,realcharges
+            
+                
 buildChargeList = (charge, length, index, realcharges, callback) ->
     if index is length
         callback realcharges 
     else
-        createdTime1= charge[index].created-60000
-        createdTime2= charge[index].created+60000
-        checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
-                realcharges.push result.id
+        last4 =charge[index].cards.data[0].last4
+        if  last4 isnt 4242 or last4 isnt 4111
+            createdTime1= charge[index].created
+            createdTime2= charge[index].created+30000
+          
+            checkForCharge [createdTime1,createdTime2], charge[index].id, (result)->
+               
+                if result.id isnt 0 and result.id isnt undefined
+                    realcharges.push result.id
                 buildChargeList charge, length,index+1,realcharges,callback
+        else 
+            buildChargeList charge, length,index+1,realcharges,callback
             
-checkForTestOrder = (query, stripeorder,callback) ->
+checkForCharge = (query, stripeorder,callback) ->
+
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
-            log.error "could not connect"
+            console.log 'could not connect'
             callback -1
         else
             sql = 'SELECT * FROM orders where UNIX_TIMESTAMP(created_at) between  ? and ? '
-            connection.query sql , query, (err,results) ->
+            query=connection.query sql , query, (err,results) ->
                 connection.release();
                 if err
-                    log.error "err"
+                    console.log 'err'
                 else if results[0]
                     callback results[0] 
+                else
+                    callback 0
+            
+                    
 findFakeOrder = (resultList,callback)->
     whereIn = '';
     firsttime=1
@@ -41,7 +59,6 @@ findFakeOrder = (resultList,callback)->
             whereIn+=','
         whereIn +=result
         firsttime=0
-    whereIn +=;
     console.log whereIn
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
@@ -79,3 +96,20 @@ flagOrder = (query) ->
             query= connection.query sql , query, (err,results) ->
                 connection.release()
             console.log query.sql
+finalChages=[]
+buildAllCustomers=(offset)->
+   
+    getCustomers offset,(result,lastObject,charges)->
+        finalChages=finalChages.concat charges
+       
+        if result is 100
+            buildAllCustomers( {limit:100, starting_after:lastObject})
+        else
+            findFakeOrder finalChages ,(results)->
+                console.log 'total fakecharges found'
+                console.log results.length
+                for result in results     
+                    setOrderToTest result.id
+                
+            
+buildAllCustomers({limit:100})
