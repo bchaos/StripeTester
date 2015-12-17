@@ -8,15 +8,15 @@
   stripe = require("stripe")("sk_test_E7EiG2iK8nfAQkRvW6VrfCzH");
 
   stripe.charges.list({
-    limit: 2000
+    limit: 20000
   }, function(err, charges) {
     var charge, createdTime1, createdTime2, _i, _len, _ref, _results;
     _ref = charges.data;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       charge = _ref[_i];
-      createdTime1 = charge.created - 20000;
-      createdTime2 = charge.created + 20000;
+      createdTime1 = charge.created;
+      createdTime2 = charge.created + 40000;
       _results.push(checkForTestOrder([createdTime1, createdTime2], charge.id));
     }
     return _results;
