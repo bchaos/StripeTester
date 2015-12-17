@@ -23,7 +23,7 @@
       createdTime1 = charge[index].created - 60000;
       createdTime2 = charge[index].created + 60000;
       return checkForTestOrder([createdTime1, createdTime2], charge[index].id, function(result) {
-        console.log(id);
+        console.log(result.id);
         realcharges.push(result.id);
         return buildChargeList(charge, length, index + 1, realcharges, callback);
       });
