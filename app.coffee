@@ -3,7 +3,6 @@ fortressPool= require path.join(__dirname, 'libs', 'fortressPool')
 stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
 stripe.charges.list {limit:20000}, (err,charges)->
-    console.log charges.data.length
     buildChargeList  charges.data, charges.data.length, 0, [], (realcharges) ->
         findFakeOrder realcharges
         
@@ -14,6 +13,7 @@ buildChargeList = (charge, length, index, realcharges, callback) ->
         createdTime1= charge[index].created-60000
         createdTime2= charge[index].created+60000
         checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
+                console.log id
                 realcharges.push result.id
                 buildChargeList charge, length,index+1,realcharges,callback
             
