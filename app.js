@@ -23,7 +23,6 @@
       createdTime1 = charge[index].created - 60000;
       createdTime2 = charge[index].created + 60000;
       return checkForTestOrder([createdTime1, createdTime2], charge[index].id, function(result) {
-        console.log(result.id);
         realcharges.push(result.id);
         return buildChargeList(charge, length, index + 1, realcharges, callback);
       });
@@ -51,14 +50,26 @@
   };
 
   findFakeOrder = function(resultList) {
+    var firsttime, result, whereIn, _i, _len;
+    whereIn = '(';
+    firsttime = 0;
+    for (_i = 0, _len = resultList.length; _i < _len; _i++) {
+      result = resultList[_i];
+      if (!firsttime) {
+        whereIn += ',';
+      }
+      whereIn += result;
+    }
+    whereIn += ')';
+    console.log(whereIn);
     return fortressPool.getConnection(function(err, connection) {
       var query, sql;
       if (err || typeof connection === "undefined") {
         log.error("could not connect");
         return callback(-1);
       } else {
-        sql = 'SELECT * FROM orders where id not in (?)';
-        query = connection.query(sql, resultList, function(err, results) {
+        sql = 'SELECT * FROM orders where id not in ? ';
+        query = connection.query(sql, whereIn, function(err, results) {
           connection.release();
           if (err) {
             return log.error("err");

@@ -13,7 +13,6 @@ buildChargeList = (charge, length, index, realcharges, callback) ->
         createdTime1= charge[index].created-60000
         createdTime2= charge[index].created+60000
         checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
-                console.log result.id
                 realcharges.push result.id
                 buildChargeList charge, length,index+1,realcharges,callback
             
@@ -31,13 +30,21 @@ checkForTestOrder = (query, stripeorder,callback) ->
                 else if results[0]
                     callback results[0] 
 findFakeOrder = (resultList)->
+    whereIn = '(';
+    firsttime=0
+    for result in resultList
+        if !firsttime
+            whereIn+=','
+        whereIn +=result
+    whereIn += ')';
+    console.log whereIn
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
             log.error "could not connect"
             callback -1
         else
-            sql = 'SELECT * FROM orders where id not in (?)'
-            query =connection.query sql , resultList, (err,results) ->
+            sql = 'SELECT * FROM orders where id not in ? '
+            query =connection.query sql , whereIn, (err,results) ->
                  connection.release();
                  if err
                     log.error "err"
