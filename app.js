@@ -51,25 +51,23 @@
 
   findFakeOrder = function(resultList) {
     var firsttime, result, whereIn, _i, _len;
-    whereIn = '(';
-    firsttime = 1;
+    whereIn = firsttime = 1;
     for (_i = 0, _len = resultList.length; _i < _len; _i++) {
       result = resultList[_i];
       if (!firsttime) {
         whereIn += ',';
       }
-      whereIn += result;
+      whereIn += "'" + result + "'";
       firsttime = 0;
     }
-    whereIn += ')';
-    console.log(whereIn);
+    whereIn += console.log(whereIn);
     return fortressPool.getConnection(function(err, connection) {
       var query, sql;
       if (err || typeof connection === "undefined") {
         log.error("could not connect");
         return callback(-1);
       } else {
-        sql = 'SELECT * FROM orders where id not in ? ';
+        sql = 'SELECT * FROM orders where id not in (?) ';
         query = connection.query(sql, whereIn, function(err, results) {
           connection.release();
           if (err) {

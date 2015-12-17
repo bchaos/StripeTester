@@ -30,21 +30,21 @@ checkForTestOrder = (query, stripeorder,callback) ->
                 else if results[0]
                     callback results[0] 
 findFakeOrder = (resultList)->
-    whereIn = '(';
+    whereIn = ;
     firsttime=1
     for result in resultList
         if !firsttime
             whereIn+=','
-        whereIn +=result
+        whereIn +="'"+result+"'"
         firsttime=0
-    whereIn += ')';
+    whereIn +=;
     console.log whereIn
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
             log.error "could not connect"
             callback -1
         else
-            sql = 'SELECT * FROM orders where id not in ? '
+            sql = 'SELECT * FROM orders where id not in (?) '
             query =connection.query sql , whereIn, (err,results) ->
                  connection.release();
                  if err
