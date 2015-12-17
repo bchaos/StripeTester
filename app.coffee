@@ -4,7 +4,13 @@ stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
 stripe.charges.list {limit:20000}, (err,charges)->
     buildChargeList  charges.data, charges.data.length, 0, [], (realcharges) ->
-        findFakeOrder realcharges
+        findFakeOrder realcharges ,(results)->
+            consule.log 'items found'
+            console.log results.length
+            
+            for result in results 
+                
+                flagOrder {orderid:result.id}
         
 buildChargeList = (charge, length, index, realcharges, callback) ->
     if index is length
@@ -29,8 +35,8 @@ checkForTestOrder = (query, stripeorder,callback) ->
                     log.error "err"
                 else if results[0]
                     callback results[0] 
-findFakeOrder = (resultList)->
-    whereIn = ;
+findFakeOrder = (resultList,callback)->
+    whereIn = '';
     firsttime=1
     for result in resultList
         if !firsttime
@@ -50,7 +56,7 @@ findFakeOrder = (resultList)->
                  if err
                     log.error "err"
                  else if results[0]
-                    console.log results[0]
+                     callback results
             console.log query.sql
 setOrderToTest = (query) ->
     fortressPool.getConnection (err,connection)->

@@ -11,7 +11,19 @@
     limit: 20000
   }, function(err, charges) {
     return buildChargeList(charges.data, charges.data.length, 0, [], function(realcharges) {
-      return findFakeOrder(realcharges);
+      return findFakeOrder(realcharges, function(results) {
+        var result, _i, _len, _results;
+        consule.log('items found');
+        console.log(results.length);
+        _results = [];
+        for (_i = 0, _len = results.length; _i < _len; _i++) {
+          result = results[_i];
+          _results.push(flagOrder({
+            orderid: result.id
+          }));
+        }
+        return _results;
+      });
     });
   });
 
@@ -49,9 +61,10 @@
     });
   };
 
-  findFakeOrder = function(resultList) {
+  findFakeOrder = function(resultList, callback) {
     var firsttime, result, whereIn, _i, _len;
-    whereIn = firsttime = 1;
+    whereIn = '';
+    firsttime = 1;
     for (_i = 0, _len = resultList.length; _i < _len; _i++) {
       result = resultList[_i];
       if (!firsttime) {
@@ -73,7 +86,7 @@
           if (err) {
             return log.error("err");
           } else if (results[0]) {
-            return console.log(results[0]);
+            return callback(results);
           }
         });
         return console.log(query.sql);
