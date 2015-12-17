@@ -108,8 +108,8 @@ buildAllCustomers=(offset)->
             findFakeOrder finalChages ,(results)->
                 console.log 'total fakecharges found'
                 console.log results.length
-                for result in results     
-                    setOrderToTest result.id
+                #for result in results     
+                #setOrderToTest result.id
                 
             
 buildAllCustomers({limit:100})

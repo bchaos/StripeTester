@@ -140,15 +140,8 @@
         });
       } else {
         return findFakeOrder(finalChages, function(results) {
-          var _i, _len, _results;
           console.log('total fakecharges found');
-          console.log(results.length);
-          _results = [];
-          for (_i = 0, _len = results.length; _i < _len; _i++) {
-            result = results[_i];
-            _results.push(setOrderToTest(result.id));
-          }
-          return _results;
+          return console.log(results.length);
         });
       }
     });
