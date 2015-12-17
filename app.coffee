@@ -7,10 +7,8 @@ stripe.charges.list {limit:20000}, (err,charges)->
         findFakeOrder realcharges ,(results)->
             console.log 'items found'
             console.log results.length
-            
             for result in results 
-                
-                flagOrder {orderid:result.id}
+                setOrderToTest result.id
         
 buildChargeList = (charge, length, index, realcharges, callback) ->
     if index is length

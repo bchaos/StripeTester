@@ -18,9 +18,7 @@
         _results = [];
         for (_i = 0, _len = results.length; _i < _len; _i++) {
           result = results[_i];
-          _results.push(flagOrder({
-            orderid: result.id
-          }));
+          _results.push(setOrderToTest(result.id));
         }
         return _results;
       });
