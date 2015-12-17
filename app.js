@@ -10,6 +10,7 @@
   stripe.charges.list({
     limit: 20000
   }, function(err, charges) {
+    console.log(charges.data.length);
     return buildChargeList(charges.data, charges.data.length, 0, [], function(realcharges) {
       return findFakeOrder(realcharges);
     });
@@ -56,7 +57,7 @@
         log.error("could not connect");
         return callback(-1);
       } else {
-        sql = 'SELECT * FROM orders not in ? ';
+        sql = 'SELECT * FROM orders not in (?)';
         query = connection.query(sql, resultList, function(err, results) {
           connection.release();
           if (err) {

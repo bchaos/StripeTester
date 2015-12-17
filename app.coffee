@@ -3,11 +3,11 @@ fortressPool= require path.join(__dirname, 'libs', 'fortressPool')
 stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
 stripe.charges.list {limit:20000}, (err,charges)->
+    console.log charges.data.length
     buildChargeList  charges.data, charges.data.length, 0, [], (realcharges) ->
         findFakeOrder realcharges
         
 buildChargeList = (charge, length, index, realcharges, callback) ->
-
     if index is length
         callback realcharges 
     else
@@ -36,7 +36,7 @@ findFakeOrder = (resultList)->
             log.error "could not connect"
             callback -1
         else
-            sql = 'SELECT * FROM orders not in ? '
+            sql = 'SELECT * FROM orders not in (?)'
             query =connection.query sql , resultList, (err,results) ->
                  connection.release();
                  if err
