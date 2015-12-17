@@ -17,6 +17,7 @@
 
   buildChargeList = function(charge, length, index, realcharges, callback) {
     var createdTime1, createdTime2;
+    console.log(charge);
     if (index = length) {
       return callback(realcharges);
     } else {

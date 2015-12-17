@@ -7,6 +7,7 @@ stripe.charges.list {limit:20000}, (err,charges)->
         findFakeOrder realcharges
         
 buildChargeList = (charge, length, index, realcharges, callback) ->
+    console.log charge
     if index = length
         callback realcharges 
     else
