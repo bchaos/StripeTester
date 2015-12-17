@@ -7,7 +7,7 @@
 
   stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
-  stripe.charge.list({
+  stripe.charges.list({
     limit: 20000
   }, function(err, charges) {
     return buildChargeList(charges, charges.length, 0, [], function(realcharges) {
