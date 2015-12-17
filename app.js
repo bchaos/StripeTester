@@ -80,7 +80,7 @@
         log.error("could not connect");
         return callback(-1);
       } else {
-        sql = 'SELECT * FROM orders where id not in (?) ';
+        sql = 'SELECT * FROM orders where id not in (?) and UNIX_TIMESTAMP(created_at) >  UNIX_TIMESTAMP(NOW())-1728000000';
         query = connection.query(sql, whereIn, function(err, results) {
           connection.release();
           if (err) {
