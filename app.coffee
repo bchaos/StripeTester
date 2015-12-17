@@ -11,8 +11,8 @@ buildChargeList = (charge, length, index, realcharges, callback) ->
     if index is length
         callback realcharges 
     else
-        createdTime1= charge[index].created
-        createdTime2= charge[index].created+20000
+        createdTime1= charge[index].created-60000
+        createdTime2= charge[index].created+60000
         checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
                 realcharges.push result.id
                 buildChargeList charge, length,index+1,realcharges,callback
@@ -36,7 +36,7 @@ findFakeOrder = (resultList)->
             log.error "could not connect"
             callback -1
         else
-            sql = 'SELECT * FROM orders not in (?)'
+            sql = 'SELECT * FROM orders where id not in (?)'
             query =connection.query sql , resultList, (err,results) ->
                  connection.release();
                  if err

@@ -21,8 +21,8 @@
     if (index === length) {
       return callback(realcharges);
     } else {
-      createdTime1 = charge[index].created;
-      createdTime2 = charge[index].created + 20000;
+      createdTime1 = charge[index].created - 60000;
+      createdTime2 = charge[index].created + 60000;
       return checkForTestOrder([createdTime1, createdTime2], charge[index].id, function(result) {
         realcharges.push(result.id);
         return buildChargeList(charge, length, index + 1, realcharges, callback);
@@ -57,7 +57,7 @@
         log.error("could not connect");
         return callback(-1);
       } else {
-        sql = 'SELECT * FROM orders not in (?)';
+        sql = 'SELECT * FROM orders where id not in (?)';
         query = connection.query(sql, resultList, function(err, results) {
           connection.release();
           if (err) {
