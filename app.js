@@ -10,14 +10,14 @@
   stripe.charges.list({
     limit: 20000
   }, function(err, charges) {
-    return buildChargeList(charges.data, charges.length, 0, [], function(realcharges) {
+    return buildChargeList(charges.data, charges.data.length, 0, [], function(realcharges) {
       return findFakeOrder(realcharges);
     });
   });
 
   buildChargeList = function(charge, length, index, realcharges, callback) {
     var createdTime1, createdTime2;
-    if (index = length) {
+    if (index === length) {
       return callback(realcharges);
     } else {
       console.log(index);
