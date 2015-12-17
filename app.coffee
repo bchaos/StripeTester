@@ -31,11 +31,12 @@ checkForTestOrder = (query, stripeorder,callback) ->
                     callback results[0] 
 findFakeOrder = (resultList)->
     whereIn = '(';
-    firsttime=0
+    firsttime=1
     for result in resultList
         if !firsttime
             whereIn+=','
         whereIn +=result
+        firsttime=0
     whereIn += ')';
     console.log whereIn
     fortressPool.getConnection (err,connection)->

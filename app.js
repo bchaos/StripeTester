@@ -52,13 +52,14 @@
   findFakeOrder = function(resultList) {
     var firsttime, result, whereIn, _i, _len;
     whereIn = '(';
-    firsttime = 0;
+    firsttime = 1;
     for (_i = 0, _len = resultList.length; _i < _len; _i++) {
       result = resultList[_i];
       if (!firsttime) {
         whereIn += ',';
       }
       whereIn += result;
+      firsttime = 0;
     }
     whereIn += ')';
     console.log(whereIn);
