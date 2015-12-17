@@ -1,5 +1,5 @@
 (function() {
-  var checkForTestOrder, flagOrder, fortressPool, path, setOrderToTest, stripe;
+  var checkForTestOrder, cleardb, flagOrder, fortressPool, path, setOrderToTest, stripe;
 
   path = require('path');
 
@@ -17,8 +17,8 @@
       charge = _ref[_i];
       if (charge.data.object.last4 === void 0 || charge.data.object.last4 === void 0) {
         console.log(charge);
-        createdTime1 = charge.created - 60000;
-        createdTime2 = charge.created + 60000;
+        createdTime1 = charge.created;
+        createdTime2 = charge.created + 20000;
         _results.push(checkForTestOrder([createdTime1, createdTime2], charge.id));
       } else {
         _results.push(void 0);
@@ -26,6 +26,16 @@
     }
     return _results;
   });
+
+  cleardb = function() {
+    var sql;
+    if (err || typeof connection === "undefined") {
+      log.error("could not connect");
+      return callback(-1);
+    } else {
+      return sql = 'SELECT * FROM orders where UNIX_TIMESTAMP(created_at) between  ? and ? ';
+    }
+  };
 
   checkForTestOrder = function(query, stripeorder) {
     return fortressPool.getConnection(function(err, connection) {

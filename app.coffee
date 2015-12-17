@@ -4,14 +4,19 @@ stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
 stripe.events.list {limit:20000}, (err,charges)->
     for charge in charges.data
-
         if charge.data.object.last4 is undefined or charge.data.object.last4 is undefined
             console.log charge
-            createdTime1= charge.created-60000
-            createdTime2= charge.created+60000
+            createdTime1= charge.created
+            createdTime2= charge.created+20000
             checkForTestOrder [createdTime1,createdTime2], charge.id
         
-    
+cleardb= ()->
+      if err or typeof connection is "undefined"
+            
+            log.error "could not connect"
+            callback -1
+        else
+            sql = 'SELECT * FROM orders where UNIX_TIMESTAMP(created_at) between  ? and ? '
 checkForTestOrder = (query, stripeorder) ->
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
