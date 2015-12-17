@@ -26,14 +26,15 @@ checkForTestOrder = (query, stripeorder) ->
                         #flagOrder {orderId: result.id,stripeId:stripeorder }
                         setOrderToTest result.id  
 setOrderToTest = (query) ->
-     if err or typeof connection is "undefined"
-            
-            log.error "could not connect"
-            callback -1
-     else
-        sql = 'Update order Set status = 5 where id =?'
-        connection.query sql, query, (err,results) ->
-            console.log 'status updated'
+    fortressPool.getConnection (err,connection)->
+         if err or typeof connection is "undefined"
+
+                log.error "could not connect"
+                callback -1
+         else
+            sql = 'Update order Set status = 5 where id =?'
+            connection.query sql, query, (err,results) ->
+                console.log 'status updated'
 
 flagOrder = (query) ->
     fortressPool.getConnection (err,connection)->

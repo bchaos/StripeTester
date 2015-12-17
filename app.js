@@ -49,16 +49,18 @@
   };
 
   setOrderToTest = function(query) {
-    var sql;
-    if (err || typeof connection === "undefined") {
-      log.error("could not connect");
-      return callback(-1);
-    } else {
-      sql = 'Update order Set status = 5 where id =?';
-      return connection.query(sql, query, function(err, results) {
-        return console.log('status updated');
-      });
-    }
+    return fortressPool.getConnection(function(err, connection) {
+      var sql;
+      if (err || typeof connection === "undefined") {
+        log.error("could not connect");
+        return callback(-1);
+      } else {
+        sql = 'Update order Set status = 5 where id =?';
+        return connection.query(sql, query, function(err, results) {
+          return console.log('status updated');
+        });
+      }
+    });
   };
 
   flagOrder = function(query) {
