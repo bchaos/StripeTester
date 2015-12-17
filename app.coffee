@@ -2,22 +2,21 @@ path = require('path')
 fortressPool= require path.join(__dirname, 'libs', 'fortressPool') 
 stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
-stripe.events.list {limit:20000}, (err,charges)->
-    for charge in charges.data
-        if charge.data.object.last4 is undefined or charge.data.object.last4 is undefined
-            console.log charge
-            createdTime1= charge.created
-            createdTime2= charge.created+20000
-            checkForTestOrder [createdTime1,createdTime2], charge.id
+stripe.charge.list {limit:20000}, (err,charges)->
+    buildChargeList  charges, charges.length, 0, [], (realcharges) ->
+        findFakeOrder realcharges
         
-cleardb= ()->
-      if err or typeof connection is "undefined"
+buildChargeList = (charge, length, index, realcharges, callback) ->
+    if index = length
+        callback realcharges 
+    else
+        createdTime1= charge[index].data.created
+        createdTime2= charge[index].data.created+20000
+        checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
+                realCharges.push result.id
+                buildChargeList charge, length,index+1,realcharges,callback
             
-            log.error "could not connect"
-            callback -1
-        else
-            sql = 'SELECT * FROM orders where UNIX_TIMESTAMP(created_at) between  ? and ? '
-checkForTestOrder = (query, stripeorder) ->
+checkForTestOrder = (query, stripeorder,callback) ->
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
             
@@ -30,9 +29,21 @@ checkForTestOrder = (query, stripeorder) ->
                 if err
                     log.error "err"
                 else if results[0]
-                    for result in results 
-                        flagOrder {orderId: result.id,stripeId:stripeorder }
-                        #setOrderToTest result.id  
+                    callback results[0] 
+findFakeOrder = (resultList)->
+    fortressPool.getConnection (err,connection)->
+        if err or typeof connection is "undefined"
+            
+            log.error "could not connect"
+            callback -1
+        else
+            sql = 'SELECT * FROM orders not in ? '
+            connection.query sql , query, (err,results) ->
+                 connection.release();
+                 if err
+                    log.error "err"
+                else if results[0]
+                    console.log results[0]
 setOrderToTest = (query) ->
     fortressPool.getConnection (err,connection)->
          if err or typeof connection is "undefined"
