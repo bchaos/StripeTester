@@ -15,7 +15,7 @@ buildChargeList = (charge, length, index, realcharges, callback) ->
         createdTime1= charge[index].created
         createdTime2= charge[index].created+20000
         checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
-                realCharges.push result.id
+                realcharges.push result.id
                 buildChargeList charge, length,index+1,realcharges,callback
             
 checkForTestOrder = (query, stripeorder,callback) ->
