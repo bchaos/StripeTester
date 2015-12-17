@@ -4,8 +4,8 @@ stripe = require("stripe")("sk_test_E7EiG2iK8nfAQkRvW6VrfCzH");
 
 stripe.charges.list {limit:2000}, (err,charges)->
     for charge in charges.data
-        createdTime1= charge.created-3000
-        createdTime2= charge.created+3000
+        createdTime1= charge.created-20000
+        createdTime2= charge.created+20000
         checkForTestOrder [createdTime1,createdTime2], charge.id
         
     
