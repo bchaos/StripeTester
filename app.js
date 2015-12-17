@@ -20,7 +20,6 @@
     if (index === length) {
       return callback(realcharges);
     } else {
-      console.log(index);
       createdTime1 = charge[index].created;
       createdTime2 = charge[index].created + 20000;
       return checkForTestOrder([createdTime1, createdTime2], charge[index].id, function(result) {
@@ -58,7 +57,7 @@
         return callback(-1);
       } else {
         sql = 'SELECT * FROM orders not in ? ';
-        return connection.query(sql, query, function(err, results) {
+        return connection.query(sql, resultList, function(err, results) {
           connection.release();
           if (err) {
             return log.error("err");

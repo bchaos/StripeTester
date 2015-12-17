@@ -11,7 +11,6 @@ buildChargeList = (charge, length, index, realcharges, callback) ->
     if index is length
         callback realcharges 
     else
-        console.log index
         createdTime1= charge[index].created
         createdTime2= charge[index].created+20000
         checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
@@ -40,7 +39,7 @@ findFakeOrder = (resultList)->
             callback -1
         else
             sql = 'SELECT * FROM orders not in ? '
-            connection.query sql , query, (err,results) ->
+            connection.query sql , resultList, (err,results) ->
                  connection.release();
                  if err
                     log.error "err"
