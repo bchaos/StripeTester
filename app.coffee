@@ -1,12 +1,15 @@
 path = require('path')
 fortressPool= require path.join(__dirname, 'libs', 'fortressPool') 
-stripe = require("stripe")("sk_test_E7EiG2iK8nfAQkRvW6VrfCzH");
+stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
-stripe.charges.list {limit:20000}, (err,charges)->
+stripe.events.list {limit:20000}, (err,charges)->
     for charge in charges.data
-        createdTime1= charge.created-60000
-        createdTime2= charge.created+60000
-        checkForTestOrder [createdTime1,createdTime2], charge.id
+
+        if charge.data.object.last4 is undefined or charge.data.object.last4 is undefined
+            console.log charge
+            createdTime1= charge.created-60000
+            createdTime2= charge.created+60000
+            checkForTestOrder [createdTime1,createdTime2], charge.id
         
     
 checkForTestOrder = (query, stripeorder) ->
@@ -23,8 +26,8 @@ checkForTestOrder = (query, stripeorder) ->
                     log.error "err"
                 else if results[0]
                     for result in results 
-                        #flagOrder {orderId: result.id,stripeId:stripeorder }
-                        setOrderToTest result.id  
+                        flagOrder {orderId: result.id,stripeId:stripeorder }
+                        #setOrderToTest result.id  
 setOrderToTest = (query) ->
     fortressPool.getConnection (err,connection)->
          if err or typeof connection is "undefined"

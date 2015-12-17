@@ -5,9 +5,9 @@
 
   fortressPool = require(path.join(__dirname, 'libs', 'fortressPool'));
 
-  stripe = require("stripe")("sk_test_E7EiG2iK8nfAQkRvW6VrfCzH");
+  stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
-  stripe.charges.list({
+  stripe.events.list({
     limit: 20000
   }, function(err, charges) {
     var charge, createdTime1, createdTime2, _i, _len, _ref, _results;
@@ -15,9 +15,14 @@
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       charge = _ref[_i];
-      createdTime1 = charge.created - 60000;
-      createdTime2 = charge.created + 60000;
-      _results.push(checkForTestOrder([createdTime1, createdTime2], charge.id));
+      if (charge.data.object.last4 === void 0 || charge.data.object.last4 === void 0) {
+        console.log(charge);
+        createdTime1 = charge.created - 60000;
+        createdTime2 = charge.created + 60000;
+        _results.push(checkForTestOrder([createdTime1, createdTime2], charge.id));
+      } else {
+        _results.push(void 0);
+      }
     }
     return _results;
   });
@@ -39,7 +44,10 @@
             _results = [];
             for (_i = 0, _len = results.length; _i < _len; _i++) {
               result = results[_i];
-              _results.push(setOrderToTest(result.id));
+              _results.push(flagOrder({
+                orderId: result.id,
+                stripeId: stripeorder
+              }));
             }
             return _results;
           }
