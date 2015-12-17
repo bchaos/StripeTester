@@ -20,10 +20,9 @@
     if (index = length) {
       return callback(realcharges);
     } else {
-      console.log(charge[0]);
-      createdTime1 = charge[index].source.created;
-      createdTime2 = charge[index].source.created + 20000;
-      return checkForTestOrder([createdTime1, createdTime2], charge[index].source.id, function(result) {
+      createdTime1 = charge[index].created;
+      createdTime2 = charge[index].created + 20000;
+      return checkForTestOrder([createdTime1, createdTime2], charge[index].id, function(result) {
         realCharges.push(result.id);
         return buildChargeList(charge, length, index + 1, realcharges, callback);
       });
