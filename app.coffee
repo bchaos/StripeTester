@@ -24,7 +24,7 @@ checkForTestOrder = (query, stripeorder) ->
                 else if results[0]
                     for result in results 
                         #flagOrder {orderId: result.id,stripeId:stripeorder }
-                        setOrderToTest result.id
+                        setOrderToTest result.id  
 setOrderToTest = (query) ->
      if err or typeof connection is "undefined"
             

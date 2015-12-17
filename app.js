@@ -1,5 +1,5 @@
 (function() {
-  var checkForTestOrder, flagOrder, fortressPool, path, stripe;
+  var checkForTestOrder, flagOrder, fortressPool, path, setOrderToTest, stripe;
 
   path = require('path');
 
@@ -39,16 +39,26 @@
             _results = [];
             for (_i = 0, _len = results.length; _i < _len; _i++) {
               result = results[_i];
-              _results.push(flagOrder({
-                orderId: result.id,
-                stripeId: stripeorder
-              }));
+              _results.push(setOrderToTest(result.id));
             }
             return _results;
           }
         });
       }
     });
+  };
+
+  setOrderToTest = function(query) {
+    var sql;
+    if (err || typeof connection === "undefined") {
+      log.error("could not connect");
+      return callback(-1);
+    } else {
+      sql = 'Update order Set status = 5 where id =?';
+      return connection.query(sql, query, function(err, results) {
+        return console.log('status updated');
+      });
+    }
   };
 
   flagOrder = function(query) {
