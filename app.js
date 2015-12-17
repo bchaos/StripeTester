@@ -20,7 +20,7 @@
     if (index = length) {
       return callback(realcharges);
     } else {
-      console.log(charge[index]);
+      console.log(index);
       createdTime1 = charge[index].created;
       createdTime2 = charge[index].created + 20000;
       return checkForTestOrder([createdTime1, createdTime2], charge[index].id, function(result) {
