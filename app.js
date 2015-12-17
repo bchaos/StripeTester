@@ -17,13 +17,12 @@
 
   buildChargeList = function(charge, length, index, realcharges, callback) {
     var createdTime1, createdTime2;
-    console.log(charge);
     if (index = length) {
       return callback(realcharges);
     } else {
-      createdTime1 = charge[index].data.created;
-      createdTime2 = charge[index].data.created + 20000;
-      return checkForTestOrder([createdTime1, createdTime2], charge[index].id, function(result) {
+      createdTime1 = charge[index].source.created;
+      createdTime2 = charge[index].source.created + 20000;
+      return checkForTestOrder([createdTime1, createdTime2], charge[index].source.id, function(result) {
         realCharges.push(result.id);
         return buildChargeList(charge, length, index + 1, realcharges, callback);
       });

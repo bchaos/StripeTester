@@ -7,13 +7,13 @@ stripe.charges.list {limit:20000}, (err,charges)->
         findFakeOrder realcharges
         
 buildChargeList = (charge, length, index, realcharges, callback) ->
-    console.log charge
+
     if index = length
         callback realcharges 
     else
-        createdTime1= charge[index].data.created
-        createdTime2= charge[index].data.created+20000
-        checkForTestOrder [createdTime1,createdTime2], charge[index].id, (result)->
+        createdTime1= charge[index].source.created
+        createdTime2= charge[index].source.created+20000
+        checkForTestOrder [createdTime1,createdTime2], charge[index].source.id, (result)->
                 realCharges.push result.id
                 buildChargeList charge, length,index+1,realcharges,callback
             
