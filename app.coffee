@@ -32,10 +32,10 @@ setOrderToTest = (query) ->
                 log.error "could not connect"
                 callback -1
          else
-            sql = 'Update order Set status = 5 where id =?'
-            connection.query sql, query, (err,results) ->
+            sql = 'Update orders Set status = 5 where id =?'
+            query=connection.query sql, query, (err,results) ->
                 console.log 'status updated'
-
+            console.log query.sql
 flagOrder = (query) ->
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"

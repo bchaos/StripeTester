@@ -55,10 +55,11 @@
         log.error("could not connect");
         return callback(-1);
       } else {
-        sql = 'Update order Set status = 5 where id =?';
-        return connection.query(sql, query, function(err, results) {
+        sql = 'Update orders Set status = 5 where id =?';
+        query = connection.query(sql, query, function(err, results) {
           return console.log('status updated');
         });
+        return console.log(query.sql);
       }
     });
   };
