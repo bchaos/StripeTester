@@ -51,13 +51,13 @@
 
   findFakeOrder = function(resultList) {
     return fortressPool.getConnection(function(err, connection) {
-      var sql;
+      var query, sql;
       if (err || typeof connection === "undefined") {
         log.error("could not connect");
         return callback(-1);
       } else {
         sql = 'SELECT * FROM orders not in ? ';
-        return connection.query(sql, resultList, function(err, results) {
+        query = connection.query(sql, resultList, function(err, results) {
           connection.release();
           if (err) {
             return log.error("err");
@@ -65,6 +65,7 @@
             return console.log(results[0]);
           }
         });
+        return console.log(query.sql);
       }
     });
   };

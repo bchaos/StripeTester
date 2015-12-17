@@ -20,7 +20,6 @@ buildChargeList = (charge, length, index, realcharges, callback) ->
 checkForTestOrder = (query, stripeorder,callback) ->
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
-            
             log.error "could not connect"
             callback -1
         else
@@ -34,17 +33,17 @@ checkForTestOrder = (query, stripeorder,callback) ->
 findFakeOrder = (resultList)->
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
-            
             log.error "could not connect"
             callback -1
         else
             sql = 'SELECT * FROM orders not in ? '
-            connection.query sql , resultList, (err,results) ->
+            query =connection.query sql , resultList, (err,results) ->
                  connection.release();
                  if err
                     log.error "err"
                  else if results[0]
                     console.log results[0]
+            console.log query.sql
 setOrderToTest = (query) ->
     fortressPool.getConnection (err,connection)->
          if err or typeof connection is "undefined"
