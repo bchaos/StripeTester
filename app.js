@@ -99,6 +99,7 @@
         log.error("could not connect");
         return callback(-1);
       } else {
+        connection.release();
         sql = 'Update orders Set status = 5 where id =?';
         query = connection.query(sql, query, function(err, results) {
           return console.log('status updated');

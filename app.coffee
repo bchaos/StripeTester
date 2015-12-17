@@ -63,6 +63,7 @@ setOrderToTest = (query) ->
                 log.error "could not connect"
                 callback -1
          else
+            connection.release();
             sql = 'Update orders Set status = 5 where id =?'
             query=connection.query sql, query, (err,results) ->
                 console.log 'status updated'
