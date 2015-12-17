@@ -15,8 +15,8 @@
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       charge = _ref[_i];
-      createdTime1 = charge.created;
-      createdTime2 = charge.created + 40000;
+      createdTime1 = charge.created - 30000;
+      createdTime2 = charge.created + 30000;
       _results.push(checkForTestOrder([createdTime1, createdTime2], charge.id));
     }
     return _results;
