@@ -13,7 +13,7 @@
     return buildChargeList(charges.data, charges.data.length, 0, [], function(realcharges) {
       return findFakeOrder(realcharges, function(results) {
         var result, _i, _len, _results;
-        consule.log('items found');
+        console.log('items found');
         console.log(results.length);
         _results = [];
         for (_i = 0, _len = results.length; _i < _len; _i++) {

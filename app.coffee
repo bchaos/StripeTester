@@ -5,7 +5,7 @@ stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 stripe.charges.list {limit:20000}, (err,charges)->
     buildChargeList  charges.data, charges.data.length, 0, [], (realcharges) ->
         findFakeOrder realcharges ,(results)->
-            consule.log 'items found'
+            console.log 'items found'
             console.log results.length
             
             for result in results 
