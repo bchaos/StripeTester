@@ -21,7 +21,7 @@ buildChargeList = (charge, length, index, realcharges, callback) ->
         callback realcharges 
     else
         last4 =charge[index].cards.data[0].last4
-        if  last4 isnt 4242 or last4 isnt 4111
+        if  last4 isnt 4242 or last4 isnt 4111 or last4 isnt 4444 or last4 isnt 1881 or last4 isnt 8210 or last4 isnt 5100 or last4 isnt 0005 or last4 isnt 8431 or last4 isnt 1117 or last4 isnt 9424 or last4 isnt 0000
             createdTime1= charge[index].created
             createdTime2= charge[index].created+30000
           
@@ -108,8 +108,8 @@ buildAllCustomers=(offset)->
             findFakeOrder finalChages ,(results)->
                 console.log 'total fakecharges found'
                 console.log results.length
-                #for result in results     
-                #setOrderToTest result.id
+                for result in results     
+                    setOrderToTest result.id
                 
             
 buildAllCustomers({limit:100})

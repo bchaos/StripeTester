@@ -16,7 +16,7 @@
   "fortressDb": {
     "host": "fortress.c7tnnahrboq4.us-west-2.rds.amazonaws.com",
     "user": "fortress",
-    "password": "nU34<(8mv=XW",
+    "password": "nU34<(8mv=XW", 
     "port": "3306",
     "database": "fortress"
   }, 
