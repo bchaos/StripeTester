@@ -42,7 +42,7 @@ findFakeOrder = (resultList)->
                  connection.release();
                  if err
                     log.error "err"
-                else if results[0]
+                 else if results[0]
                     console.log results[0]
 setOrderToTest = (query) ->
     fortressPool.getConnection (err,connection)->
