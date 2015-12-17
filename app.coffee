@@ -12,7 +12,7 @@ stripe.charges.list {limit:2000}, (err,charges)->
 checkForTestOrder = (query, stripeorder) ->
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
-            connection.release();
+            
             log.error "could not connect"
             callback -1
         else
@@ -28,7 +28,7 @@ checkForTestOrder = (query, stripeorder) ->
 flagOrder = (query) ->
     fortressPool.getConnection (err,connection)->
         if err or typeof connection is "undefined"
-            connection.release();
+            
             log.error "could not connect"
             callback -1
         else

@@ -26,7 +26,6 @@
     return fortressPool.getConnection(function(err, connection) {
       var sql;
       if (err || typeof connection === "undefined") {
-        connection.release();
         log.error("could not connect");
         return callback(-1);
       } else {
@@ -56,7 +55,6 @@
     return fortressPool.getConnection(function(err, connection) {
       var sql;
       if (err || typeof connection === "undefined") {
-        connection.release();
         log.error("could not connect");
         return callback(-1);
       } else {

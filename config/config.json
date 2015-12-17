@@ -18,7 +18,7 @@
     "user": "fortress",
     "password": "nU34<(8mv=XW",
     "port": "3306",
-    "database": "fortressdev"
+    "database": "fortress"
   },
     
   "cache": "localhost:11211"
