@@ -41,7 +41,7 @@ findFakeOrder = (resultList,callback)->
     for result in resultList
         if !firsttime
             whereIn+=','
-        whereIn +="'"+result+"'"
+        whereIn +=result
         firsttime=0
     whereIn +=;
     console.log whereIn
@@ -50,7 +50,7 @@ findFakeOrder = (resultList,callback)->
             log.error "could not connect"
             callback -1
         else
-            sql = 'SELECT * FROM orders where id not in (?) and UNIX_TIMESTAMP(created_at) >  UNIX_TIMESTAMP(NOW())-1728000000'
+            sql = 'SELECT * FROM orders where id not in (?) and UNIX_TIMESTAMP(created_at) >  UNIX_TIMESTAMP(NOW())-2592000'
             query =connection.query sql , whereIn, (err,results) ->
                  connection.release();
                  if err
