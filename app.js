@@ -10,7 +10,7 @@
   stripe.charges.list({
     limit: 20000
   }, function(err, charges) {
-    return buildChargeList(charges, charges.length, 0, [], function(realcharges) {
+    return buildChargeList(charges.data, charges.length, 0, [], function(realcharges) {
       return findFakeOrder(realcharges);
     });
   });

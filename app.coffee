@@ -3,7 +3,7 @@ fortressPool= require path.join(__dirname, 'libs', 'fortressPool')
 stripe = require("stripe")("sk_live_0c3kHXxlJulHK483M2exvX9y");
 
 stripe.charges.list {limit:20000}, (err,charges)->
-    buildChargeList  charges, charges.length, 0, [], (realcharges) ->
+    buildChargeList  charges.data, charges.length, 0, [], (realcharges) ->
         findFakeOrder realcharges
         
 buildChargeList = (charge, length, index, realcharges, callback) ->
